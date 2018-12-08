@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:cardCornerRadius="4dp">
+
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+                 android:id="@+id/container"
+                 android:layout_width="match_parent"
+                 android:layout_height="196dp"
+                 android:background="@color/colorPrimaryDark">
+
+        <ImageView
+                android:id="@+id/imgPoster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
+
+        <RelativeLayout
+                android:id="@+id/containerData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorPrimary"
+                android:padding="16dp">
+
+            <TextView
+                    android:id="@+id/labelTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="Film"/>
+
+
+            <TextView
+                    android:id="@+id/labelVotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/labelTitle"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:drawableStart="@drawable/ic_votes"
+                    android:drawableLeft="@drawable/ic_votes"
+                    android:drawablePadding="4dp"
+                    android:maxLength="4"
+                    android:textColor="@android:color/white"
+                    tools:text="0.0"/>
+
+            <TextView
+                    android:id="@+id/titleGenre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/labelTitle"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toStartOf="@+id/labelVotes"
+                    android:layout_toLeftOf="@+id/labelVotes"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    tools:text="Genre"/>
+
+
+        </RelativeLayout>
+    </FrameLayout>
+</android.support.v7.widget.CardView>
