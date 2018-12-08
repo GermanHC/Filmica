@@ -2,6 +2,7 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+gradle.properties
 # Created by https://www.gitignore.io/api/gradle,kotlin,android,androidstudio
 # Edit at https://www.gitignore.io/?templates=gradle,kotlin,android,androidstudio
 
