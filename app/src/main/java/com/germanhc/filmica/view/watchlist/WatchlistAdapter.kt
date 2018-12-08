@@ -14,12 +14,13 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_watchlist.view.*
 
 class WatchlistAdapter :
-    BaseFilmAdapter<WatchlistAdapter.WatchListHolder>(
+    BaseFilmAdapter<WatchlistAdapter.WatchlistHolder>(
         layoutItem = R.layout.item_watchlist,
-        holderCreator = { view -> WatchListHolder(view) }
+        holderCreator = { view -> WatchlistHolder(view) }
     ) {
 
-    class WatchListHolder(itemView: View) : BaseFilmHolder(itemView) {
+    class WatchlistHolder(itemView: View) : BaseFilmHolder(itemView) {
+
         override fun bindFilm(film: Film) {
             super.bindFilm(film)
 
@@ -42,7 +43,7 @@ class WatchlistAdapter :
             itemView.imgPoster.tag = target
 
             Picasso.get()
-                .load(film?.getPosterUrl())
+                .load(film.getPosterUrl())
                 .error(R.drawable.placeholder)
                 .into(target)
         }

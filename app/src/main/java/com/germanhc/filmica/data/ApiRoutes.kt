@@ -14,7 +14,7 @@ object ApiRoutes {
             .appendPath("discover")
             .appendPath("movie")
             .appendQueryParameter("language", language)
-            .appendQueryParameter("sort", sort)
+            .appendQueryParameter("sort_by", sort)
             .appendQueryParameter("page", page.toString())
             .appendQueryParameter("include_adult", "false")
             .appendQueryParameter("include_video", "false")
@@ -22,7 +22,8 @@ object ApiRoutes {
             .toString()
     }
 
-    private fun getUriBuilder()= Uri.Builder()
+    private fun getUriBuilder() =
+        Uri.Builder()
             .scheme("https")
             .authority("api.themoviedb.org")
             .appendPath("3")

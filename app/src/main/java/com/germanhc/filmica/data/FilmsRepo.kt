@@ -17,15 +17,17 @@ object FilmsRepo {
     @Volatile
     private var db: AppDatabase? = null
 
-    private fun getDbInstance(context: Context): AppDatabase{
-        if (db == null){
-            db = Room.databaseBuilder(context,
+    private fun getDbInstance(context: Context): AppDatabase {
+        if (db == null) {
+            db = Room.databaseBuilder(
+                context,
                 AppDatabase::class.java,
                 "filmica-db"
             ).build()
         }
         return db as AppDatabase
     }
+
     fun findFilmById(id: String): Film? {
         return films.find { film -> film.id == id }
     }
@@ -46,7 +48,7 @@ object FilmsRepo {
         context: Context,
         film: Film,
         callbackSuccess: (Film) -> Unit
-    ){
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
             val async = async(Dispatchers.IO) {
                 val db = getDbInstance(context)
@@ -77,7 +79,7 @@ object FilmsRepo {
         context: Context,
         film: Film,
         callbackSuccess: (Film) -> Unit
-    ){
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
             val async = async(Dispatchers.IO) {
                 val db = getDbInstance(context)

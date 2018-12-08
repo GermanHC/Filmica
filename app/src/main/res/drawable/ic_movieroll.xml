@@ -19,6 +19,7 @@
         android:strokeColor="#FAFAFA"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
+
     <path
         android:fillColor="#00000000"
         android:fillType="evenOdd"

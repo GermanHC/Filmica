@@ -14,7 +14,8 @@ import kotlinx.android.synthetic.main.activity_films.*
 const val TAG_FILMS = "films"
 const val TAG_WATCHLIST = "watchlist"
 
-class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener {
+class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener, DetailsFragment.OnFilmSavedListener {
+
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
     private lateinit var activeFragment: Fragment
@@ -31,7 +32,7 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener {
             restoreFragments(activeTag)
         }
 
-        navigation?.setOnNavigationItemReselectedListener { item ->
+        navigation?.setOnNavigationItemSelectedListener { item ->
             val id = item.itemId
             when (id) {
                 R.id.action_discover -> showMainFragment(filmsFragment)
@@ -72,6 +73,10 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener {
 
     override fun onItemClicked(film: Film) {
         showDetails(film.id)
+    }
+
+    override fun onFilmSaved(film: Film) {
+        watchlistFragment.loadWatchlist()
     }
 
     private fun showMainFragment(fragment: Fragment) {

@@ -11,7 +11,7 @@ import java.util.*
 @Entity
 data class Film(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    @ColumnInfo (name = "vote_rating") var voteRating: Double = 0.0,
+    @ColumnInfo(name = "vote_rating") var voteRating: Double = 0.0,
     var title: String = "",
     var genre: String = "",
     var release: String = "",
@@ -20,7 +20,7 @@ data class Film(
 ) {
 
     @Ignore
-    constructor(): this("")
+    constructor() : this("")
 
     fun getPosterUrl(): String {
         return "$BASE_POSTER_URL$poster"

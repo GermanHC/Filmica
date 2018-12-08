@@ -36,7 +36,11 @@ class WatchlistFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        FilmsRepo.watchlist(context!!){films ->
+        loadWatchlist()
+    }
+
+    fun loadWatchlist() {
+        FilmsRepo.watchlist(context!!) { films ->
             adapter.setFilms(films.toMutableList())
         }
     }
@@ -53,7 +57,7 @@ class WatchlistFragment : Fragment() {
     }
 
     private fun deleteFilmAt(position: Int) {
-val film = adapter.getFilm(position)
+        val film = adapter.getFilm(position)
         FilmsRepo.deleteFilm(context!!, film) {
             adapter.removeFilmAt(position)
         }

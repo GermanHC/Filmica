@@ -3,10 +3,7 @@ package com.germanhc.filmica.view.films
 import android.graphics.Bitmap
 import android.support.v4.content.ContextCompat
 import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.germanhc.filmica.R
 import com.germanhc.filmica.data.Film
 import com.germanhc.filmica.view.util.BaseFilmAdapter
@@ -47,7 +44,7 @@ class FilmsAdapter(itemClickListener: ((Film) -> Unit)? = null) :
             itemView.imgPoster.tag = target
 
             Picasso.get()
-                .load(film?.getPosterUrl())
+                .load(film.getPosterUrl())
                 .error(R.drawable.placeholder)
                 .into(target)
         }

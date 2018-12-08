@@ -1,5 +1,6 @@
 package com.germanhc.filmica.view.detail
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -19,6 +20,8 @@ import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment() {
 
+    var listener: OnFilmSavedListener? = null
+
     companion object {
         fun newInstance(id: String): DetailsFragment {
             val instance = DetailsFragment()
@@ -32,10 +35,18 @@ class DetailsFragment : Fragment() {
 
     private var film: Film? = null
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context is OnFilmSavedListener)
+            listener = context
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
@@ -66,8 +77,9 @@ class DetailsFragment : Fragment() {
 
         btnAdd.setOnClickListener {
             film?.let {
-                FilmsRepo.saveFilm(context!!, it){
+                FilmsRepo.saveFilm(context!!, it) {
                     Toast.makeText(context, "Added to list", Toast.LENGTH_SHORT).show()
+                    listener?.onFilmSaved(it)
                 }
             }
         }
@@ -124,5 +136,9 @@ class DetailsFragment : Fragment() {
             overlay.setBackgroundColor(overlayColor)
             btnAdd.backgroundTintList = ColorStateList.valueOf(color)
         }
+    }
+
+    interface OnFilmSavedListener {
+        fun onFilmSaved(film: Film)
     }
 }

@@ -11,12 +11,12 @@ class ItemOffsetDecoration(@DimenRes val offsetId: Int) : RecyclerView.ItemDecor
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
 
-        val offset: Int = view.context.resources.getDimensionPixelSize(offsetId)
+        val offset = view.context.resources.getDimensionPixelSize(offsetId)
         val position = parent.getChildAdapterPosition(view)
 
         val items: Int = parent.adapter?.itemCount ?: 0
 
-        if (parent.layoutManager is GridLayoutManager){
+        if (parent.layoutManager is GridLayoutManager) {
             val columns = (parent.layoutManager as GridLayoutManager).spanCount
             val rows = (items + 1 / columns)
 
@@ -26,16 +26,14 @@ class ItemOffsetDecoration(@DimenRes val offsetId: Int) : RecyclerView.ItemDecor
             val topOffset = if (row == 1) offset else offset / 2
             val leftOffset = if (column == 1) offset else offset / 2
 
-            val bottomOffset = if(row == rows) offset else offset / 2
+            val bottomOffset = if (row == rows) offset else offset / 2
             val rightOffset = if (column == columns) offset else offset / 2
 
-            outRect.set(leftOffset,topOffset,rightOffset,bottomOffset)
-        } else if (parent.layoutManager is LinearLayoutManager){
+            outRect.set(leftOffset, topOffset, rightOffset, bottomOffset)
+        } else if (parent.layoutManager is LinearLayoutManager) {
             val top = if (position == 0) offset else 0
             outRect.set(offset, top, offset, offset)
         }
-
-
 
 
     }

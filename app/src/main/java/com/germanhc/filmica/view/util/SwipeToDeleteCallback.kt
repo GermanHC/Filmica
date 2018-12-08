@@ -9,7 +9,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import com.germanhc.filmica.R
 
-abstract class SwipeToDeleteCallback: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
     override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
         return false
     }
