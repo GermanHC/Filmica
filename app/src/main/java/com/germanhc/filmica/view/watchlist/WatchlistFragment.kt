@@ -1,6 +1,7 @@
 package com.germanhc.filmica.view.watchlist
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
@@ -11,15 +12,28 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_watchlist.*
 
 import com.germanhc.filmica.R
+import com.germanhc.filmica.data.Film
 import com.germanhc.filmica.data.FilmsRepo
 import com.germanhc.filmica.view.util.SwipeToDeleteCallback
 
 class WatchlistFragment : Fragment() {
+    lateinit var listener: OnItemClickListener
 
     val adapter: WatchlistAdapter by lazy {
-        val instance = WatchlistAdapter()
+        val instance = WatchlistAdapter { film ->
+            this.listener.onItemClicked(film)
+        }
         instance
     }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context is OnItemClickListener) {
+            listener = context
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,4 +77,7 @@ class WatchlistFragment : Fragment() {
         }
     }
 
+    interface OnItemClickListener {
+        fun onItemClicked(film: Film)
+    }
 }

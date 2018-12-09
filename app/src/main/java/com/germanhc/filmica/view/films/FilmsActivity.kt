@@ -8,16 +8,22 @@ import com.germanhc.filmica.R
 import com.germanhc.filmica.data.Film
 import com.germanhc.filmica.view.detail.DetailsActivity
 import com.germanhc.filmica.view.detail.DetailsFragment
+import com.germanhc.filmica.view.trendlist.TrendlistFragment
 import com.germanhc.filmica.view.watchlist.WatchlistFragment
 import kotlinx.android.synthetic.main.activity_films.*
 
 const val TAG_FILMS = "films"
 const val TAG_WATCHLIST = "watchlist"
+const val TAG_TRENDLIST = "trendlist"
 
-class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener, DetailsFragment.OnFilmSavedListener {
+class FilmsActivity : AppCompatActivity(),
+    FilmsFragment.OnItemClickListener,
+    WatchlistFragment.OnItemClickListener,
+    DetailsFragment.OnFilmSavedListener {
 
     private lateinit var filmsFragment: FilmsFragment
     private lateinit var watchlistFragment: WatchlistFragment
+    private lateinit var trendlistFragment: FilmsFragment
     private lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +42,7 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener, De
             val id = item.itemId
             when (id) {
                 R.id.action_discover -> showMainFragment(filmsFragment)
+                R.id.action_trending -> showMainFragment(trendlistFragment)
                 R.id.action_watchlist -> showMainFragment(watchlistFragment)
             }
             true
@@ -50,11 +57,14 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener, De
     private fun setupFragments() {
         filmsFragment = FilmsFragment()
         watchlistFragment = WatchlistFragment()
+        trendlistFragment = FilmsFragment()
 
         supportFragmentManager.beginTransaction()
             .add(R.id.container_list, filmsFragment, TAG_FILMS)
             .add(R.id.container_list, watchlistFragment, TAG_WATCHLIST)
+            .add(R.id.container_list, trendlistFragment, TAG_TRENDLIST)
             .hide(watchlistFragment)
+            .hide(trendlistFragment)
             .commit()
 
         activeFragment = filmsFragment
@@ -63,12 +73,14 @@ class FilmsActivity : AppCompatActivity(), FilmsFragment.OnItemClickListener, De
     private fun restoreFragments(tag: String) {
         filmsFragment = supportFragmentManager.findFragmentByTag(TAG_FILMS) as FilmsFragment
         watchlistFragment = supportFragmentManager.findFragmentByTag(TAG_WATCHLIST) as WatchlistFragment
+        trendlistFragment = supportFragmentManager.findFragmentByTag(TAG_TRENDLIST) as FilmsFragment
 
         activeFragment =
-                if (tag == TAG_WATCHLIST)
-                    watchlistFragment
-                else
-                    filmsFragment
+                when (tag) {
+                    TAG_WATCHLIST -> watchlistFragment
+                    TAG_TRENDLIST -> trendlistFragment
+                    else -> filmsFragment
+                }
     }
 
     override fun onItemClicked(film: Film) {

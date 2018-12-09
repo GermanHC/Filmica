@@ -10,5 +10,8 @@
     <string name="title_watchlist">Watchlist</string>
     <string name="title_share">Share Film</string>
 
-    <string name="template_share">Let\'s watch %s, Movie DB rates it with %.1f/10 </string>
+    <string name="template_share">Let\'s watch %s, Movie DB rates it with %.1f/10</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_trend">Trending</string>
 </resources>
