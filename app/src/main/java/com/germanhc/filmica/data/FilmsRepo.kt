@@ -2,10 +2,12 @@ package com.germanhc.filmica.data
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
+import com.android.volley.toolbox.*
+import com.germanhc.filmica.view.util.VolleyService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -14,9 +16,13 @@ import kotlinx.coroutines.launch
 object FilmsRepo {
     private val filmsDiscover: MutableList<Film> = mutableListOf()
     private val filmsTrend: MutableList<Film> = mutableListOf()
+    private val filmsSearch: MutableList<Film> = mutableListOf()
 
     @Volatile
     private var db: AppDatabase? = null
+
+    // Instantiate the RequestQueue with the cache and network. Start the queue.
+    lateinit var requestSearchQueue: RequestQueue
 
     private fun getDbInstance(context: Context): AppDatabase {
         if (db == null) {
@@ -35,7 +41,8 @@ object FilmsRepo {
             film = filmsDiscover.find { film -> film.id == id }
         if (film == null)
             film = filmsTrend.find { film -> film.id == id }
-
+        if (film == null)
+            film = filmsSearch.find { film -> film.id == id }
 
         return film
     }
@@ -48,7 +55,11 @@ object FilmsRepo {
     ) {
         val films = if (listType == TAG_FILMS) filmsDiscover else filmsTrend
         if (films.isEmpty()) {
-            val url: String = if (listType == TAG_FILMS) ApiRoutes.discoverUrl() else ApiRoutes.trendUrl()
+            val url: String = when (listType) {
+                TAG_TRENDLIST -> ApiRoutes.trendUrl()
+                TAG_SEARCHLIST -> ApiRoutes.searchUrl()
+                else -> ApiRoutes.discoverUrl()
+            }
             requestFilms(listType, url, callbackSuccess, callbackError, context)
         } else {
             callbackSuccess.invoke(films)
@@ -118,8 +129,33 @@ object FilmsRepo {
             { error ->
                 callbackError.invoke(error)
             })
+        request.tag = listType
         Volley.newRequestQueue(context)
             .add(request)
+    }
+
+    fun searchFilms(
+        queryText: String,
+        callbackSuccess: (MutableList<Film>) -> Unit,
+        callbackError: (VolleyError) -> Unit
+    ) {
+        filmsSearch.clear()
+        VolleyService.cancelAllTag(TAG_SEARCHLIST)
+        val url: String = ApiRoutes.searchUrl(queryText)
+        val request = JsonObjectRequest(Request.Method.GET, url, null,
+            { response ->
+                val newFilms = Film.parseFilms(response)
+                filmsSearch.addAll(newFilms.take(10))
+                callbackSuccess.invoke(filmsSearch)
+            },
+            { error ->
+                Log.d("errorVolley", error.toString())
+                callbackError.invoke(error)
+            })
+
+        request.tag = TAG_SEARCHLIST
+        VolleyService.requestQueue.add(request)
+        VolleyService.requestQueue.start()
     }
 
     fun dummyFilms(): List<Film> {

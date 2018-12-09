@@ -63,6 +63,7 @@ class DetailsFragment : Fragment() {
 
         val id: String = arguments?.getString("id") ?: ""
         val filmType: String = arguments?.getString("filmType") ?: ""
+        
         film = FilmsRepo.findFilmById(id, filmType)
 
         film?.let {

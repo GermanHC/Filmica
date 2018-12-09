@@ -17,13 +17,35 @@
             layout="@layout/layout_error"/>
 
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_films"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            app:spanCount="2"
-            tools:listitem="@layout/item_film"/>
+            android:orientation="vertical"
+    >
+        <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/search_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:visibility="gone"
+                android:contentDescription="Search Films"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:singleLine="true"/>
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_films"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/item_film"/>
+    </LinearLayout>
+
 
 </FrameLayout>

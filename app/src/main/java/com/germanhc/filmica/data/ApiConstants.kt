@@ -4,6 +4,7 @@ const val BASE_POSTER_URL = "https://image.tmdb.org/t/p/w500"
 const val TAG_FILMS = "films"
 const val TAG_WATCHLIST = "watchlist"
 const val TAG_TRENDLIST = "trendlist"
+const val TAG_SEARCHLIST = "searchlist"
 
 object ApiConstants {
     val genres: Map<Int, String> = mapOf(
