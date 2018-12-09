@@ -12,7 +12,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 object FilmsRepo {
-    private val films: MutableList<Film> = mutableListOf()
+    private val filmsDiscover: MutableList<Film> = mutableListOf()
+    private val filmsTrend: MutableList<Film> = mutableListOf()
 
     @Volatile
     private var db: AppDatabase? = null
@@ -28,17 +29,27 @@ object FilmsRepo {
         return db as AppDatabase
     }
 
-    fun findFilmById(id: String): Film? {
-        return films.find { film -> film.id == id }
+    fun findFilmById(id: String, listType: String): Film? {
+        var film: Film? = null
+        if (listType == TAG_FILMS || listType == TAG_WATCHLIST)
+            film = filmsDiscover.find { film -> film.id == id }
+        if (film == null)
+            film = filmsTrend.find { film -> film.id == id }
+
+
+        return film
     }
 
-    fun discoverFilms(
+    fun getListFilms(
+        listType: String,
         context: Context,
         callbackSuccess: ((MutableList<Film>) -> Unit),
         callbackError: ((VolleyError) -> Unit)
     ) {
+        val films = if (listType == TAG_FILMS) filmsDiscover else filmsTrend
         if (films.isEmpty()) {
-            requestDiscoverFilms(callbackSuccess, callbackError, context)
+            val url: String = if (listType == TAG_FILMS) ApiRoutes.discoverUrl() else ApiRoutes.trendUrl()
+            requestFilms(listType, url, callbackSuccess, callbackError, context)
         } else {
             callbackSuccess.invoke(films)
         }
@@ -90,12 +101,14 @@ object FilmsRepo {
         }
     }
 
-    private fun requestDiscoverFilms(
+    private fun requestFilms(
+        listType: String,
+        url: String,
         callbackSuccess: (MutableList<Film>) -> Unit,
         callbackError: (VolleyError) -> Unit,
         context: Context
     ) {
-        val url = ApiRoutes.discoverUrl()
+        val films = if (listType == TAG_FILMS) filmsDiscover else filmsTrend
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
                 val newFilms = Film.parseFilms(response)

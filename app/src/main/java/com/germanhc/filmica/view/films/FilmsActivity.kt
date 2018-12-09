@@ -6,15 +6,13 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.germanhc.filmica.R
 import com.germanhc.filmica.data.Film
+import com.germanhc.filmica.data.TAG_FILMS
+import com.germanhc.filmica.data.TAG_TRENDLIST
+import com.germanhc.filmica.data.TAG_WATCHLIST
 import com.germanhc.filmica.view.detail.DetailsActivity
 import com.germanhc.filmica.view.detail.DetailsFragment
-import com.germanhc.filmica.view.trendlist.TrendlistFragment
 import com.germanhc.filmica.view.watchlist.WatchlistFragment
 import kotlinx.android.synthetic.main.activity_films.*
-
-const val TAG_FILMS = "films"
-const val TAG_WATCHLIST = "watchlist"
-const val TAG_TRENDLIST = "trendlist"
 
 class FilmsActivity : AppCompatActivity(),
     FilmsFragment.OnItemClickListener,
@@ -55,9 +53,9 @@ class FilmsActivity : AppCompatActivity(),
     }
 
     private fun setupFragments() {
-        filmsFragment = FilmsFragment()
+        filmsFragment = FilmsFragment.newInstance(TAG_FILMS)
         watchlistFragment = WatchlistFragment()
-        trendlistFragment = FilmsFragment()
+        trendlistFragment = FilmsFragment.newInstance(TAG_TRENDLIST)
 
         supportFragmentManager.beginTransaction()
             .add(R.id.container_list, filmsFragment, TAG_FILMS)
@@ -110,7 +108,7 @@ class FilmsActivity : AppCompatActivity(),
     private fun isTablet() = this.containerDetails != null
 
     private fun showDetailsFragment(id: String) {
-        val detailsFragment = DetailsFragment.newInstance(id)
+        val detailsFragment = DetailsFragment.newInstance(id, activeFragment.tag!!)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerDetails, detailsFragment)
@@ -120,6 +118,7 @@ class FilmsActivity : AppCompatActivity(),
     private fun launchDetailsActivity(id: String) {
         val intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra("id", id)
+        intent.putExtra("filmType", activeFragment.tag)
         startActivity(intent)
 
     }

@@ -16,6 +16,18 @@ import kotlinx.android.synthetic.main.layout_error.*
 
 class FilmsFragment : Fragment() {
     lateinit var listener: OnItemClickListener
+    lateinit var listType: String
+
+    companion object {
+        fun newInstance(listType: String): FilmsFragment {
+            val instance = FilmsFragment()
+            val args = Bundle()
+            args.putString("listType", listType)
+            instance.arguments = args
+
+            return instance
+        }
+    }
 
     val list: RecyclerView by lazy {
         val instance = view!!.findViewById<RecyclerView>(R.id.list_films)
@@ -46,6 +58,8 @@ class FilmsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listType = arguments?.getString("listType") ?: ""
+
         list.adapter = adapter
 
         btnRetry?.setOnClickListener { reload() }
@@ -57,7 +71,8 @@ class FilmsFragment : Fragment() {
     }
 
     fun reload() {
-        FilmsRepo.discoverFilms(context!!,
+        FilmsRepo.getListFilms(listType,
+            context!!,
             { films ->
                 progress?.visibility = View.INVISIBLE
                 layoutError?.visibility = View.INVISIBLE

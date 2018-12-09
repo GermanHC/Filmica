@@ -12,8 +12,9 @@ class DetailsActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val id = intent.getStringExtra("id")
+            val filmType = intent.getStringExtra("filmType")
 
-            val detailsFragment = DetailsFragment.newInstance(id)
+            val detailsFragment = DetailsFragment.newInstance(id, filmType)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.container_details, detailsFragment)

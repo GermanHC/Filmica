@@ -23,10 +23,11 @@ class DetailsFragment : Fragment() {
     var listener: OnFilmSavedListener? = null
 
     companion object {
-        fun newInstance(id: String): DetailsFragment {
+        fun newInstance(id: String, filmType: String): DetailsFragment {
             val instance = DetailsFragment()
             val args = Bundle()
             args.putString("id", id)
+            args.putString("filmType", filmType)
             instance.arguments = args
 
             return instance
@@ -61,7 +62,8 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val id: String = arguments?.getString("id") ?: ""
-        film = FilmsRepo.findFilmById(id)
+        val filmType: String = arguments?.getString("filmType") ?: ""
+        film = FilmsRepo.findFilmById(id, filmType)
 
         film?.let {
             with(it) {
