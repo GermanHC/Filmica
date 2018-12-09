@@ -16,4 +16,6 @@
     <string name="title_trend">Trending</string>
     <string name="title_search">Search</string>
     <string name="label_noelements">Seleccione elementos para cargar el detalle</string>
+    <string name="snackbarDeleteElement">Delete element</string>
+    <string name="undo">Undo</string>
 </resources>
