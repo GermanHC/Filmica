@@ -70,7 +70,6 @@ class FilmsActivity : AppCompatActivity(),
             .commit()
 
         activeFragment = filmsFragment
-        showDetails("")
     }
 
     private fun restoreFragments(tag: String) {
