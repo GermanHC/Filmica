@@ -1,9 +1,12 @@
 package com.germanhc.filmica.view.films
 
 import android.content.Context
+import android.nfc.tech.MifareUltralight
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +24,7 @@ class FilmsFragment : Fragment() {
     lateinit var listener: OnItemClickListener
     lateinit var listType: String
     private var searchQuery: String = ""
+    private var actualPage: Int = 0
 
     companion object {
         fun newInstance(listType: String): FilmsFragment {
@@ -28,7 +32,7 @@ class FilmsFragment : Fragment() {
             val args = Bundle()
             args.putString("listType", listType)
             instance.arguments = args
-
+            instance.actualPage = 1
             return instance
         }
     }
@@ -64,6 +68,14 @@ class FilmsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         listType = arguments?.getString("listType") ?: ""
 
+        searchBoxFunctionality()
+
+        list.adapter = adapter
+        list.addOnScrollListener(recyclerViewOnScrollListener)
+        btnRetry?.setOnClickListener { reload() }
+    }
+
+    private fun searchBoxFunctionality() {
         search_box?.visibility = if (listType == TAG_SEARCHLIST) View.VISIBLE else View.GONE
         search_box?.let {
             this.search_box.onChange {
@@ -81,10 +93,6 @@ class FilmsFragment : Fragment() {
                 true
             }
         }
-
-        list.adapter = adapter
-
-        btnRetry?.setOnClickListener { reload() }
     }
 
     override fun onResume() {
@@ -97,6 +105,7 @@ class FilmsFragment : Fragment() {
 
     fun reload() {
         FilmsRepo.getListFilms(listType,
+            actualPage,
             context!!,
             { films ->
                 progress?.visibility = View.INVISIBLE
@@ -128,7 +137,31 @@ class FilmsFragment : Fragment() {
                     error.printStackTrace()
                 })
         }
+    }
 
+    private val recyclerViewOnScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val visibleItemCount = (recyclerView.layoutManager as LinearLayoutManager).childCount
+            val totalItemCount = (recyclerView.layoutManager as LinearLayoutManager).itemCount
+            val firstVisibleItemPosition =
+                (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+            //if (!isLoading && !isLastPage) {
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
+                    && firstVisibleItemPosition >= 0
+                    && totalItemCount >= MifareUltralight.PAGE_SIZE
+                ) {
+                    actualPage +=1
+                    reload()
+                    adapter.notifyItemRangeInserted(visibleItemCount + firstVisibleItemPosition+1, adapter.itemCount)
+                }
+            //}
+        }
     }
 
     interface OnItemClickListener {

@@ -49,6 +49,7 @@ object FilmsRepo {
 
     fun getListFilms(
         listType: String,
+        numPage: Int,
         context: Context,
         callbackSuccess: ((MutableList<Film>) -> Unit),
         callbackError: ((VolleyError) -> Unit)
@@ -56,9 +57,9 @@ object FilmsRepo {
         val films = if (listType == TAG_FILMS) filmsDiscover else filmsTrend
         if (films.isEmpty()) {
             val url: String = when (listType) {
-                TAG_TRENDLIST -> ApiRoutes.trendUrl()
+                TAG_TRENDLIST -> ApiRoutes.trendUrl(page = numPage)
                 TAG_SEARCHLIST -> ApiRoutes.searchUrl()
-                else -> ApiRoutes.discoverUrl()
+                else -> ApiRoutes.discoverUrl(page = numPage)
             }
             requestFilms(listType, url, callbackSuccess, callbackError, context)
         } else {
